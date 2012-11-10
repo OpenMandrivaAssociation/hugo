@@ -1,0 +1,11 @@
+--- hugo-2.12/pce.h~	2005-04-05 21:53:14.000000000 +0200
++++ hugo-2.12/pce.h	2005-11-07 09:44:11.321321624 +0100
+@@ -196,7 +196,7 @@
+ extern UChar language;
+ // the current language
+ 
+-extern int BaseClock, UPeriod;
++extern int UPeriod;
+ 
+ extern UChar US_encoded_card;
+ // Do we have to swap even and odd bytes in the rom
