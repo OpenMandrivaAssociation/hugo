@@ -84,3 +84,83 @@ rm -rf %{buildroot}
 %{clean_menus}
 %endif
 
+
+
+%changelog
+* Fri Jul 29 2011 Andrey Bondrov <abondrov@mandriva.org> 2.12-11mdv2012.0
++ Revision: 692192
+- imported package hugo
+
+
+* Thu Jul 21 2011 Andrey Bondrov <bondrov@math.dvgu.ru> 2.12-11mdv2011.0
+- Import from PLF
+- Remove PLF reference
+
+* Wed Jan 20 2010 Götz Waschk <goetz@zarb.org> 2.12-10plf2010.1
+- update menu
+
+* Tue Jan 13 2009 Guillaume Bedot <littletux@zarb.org> 2.12-9plf2009.1
+- utf8 changelog
+
+* Tue Jan 13 2009 Guillaume Bedot <littletux@zarb.org> 2.12-8plf2009.1
+- fixed 64bit build (segfaulted)
+- added man pages
+- fixed license
+- dropped old-style menu
+
+* Sun Dec 21 2008 Götz Waschk <goetz@zarb.org> 2.12-7plf2009.1
+- rebuild
+
+* Sun Dec 16 2007 Guillaume Bedot <littletux@zarb.org> 2.12-6plf2008.1
+- fix desktop file
+
+* Tue Aug  1 2006 Götz Waschk <goetz@zarb.org> 2.12-5plf2007.0
+- xdg menu
+
+* Mon Dec 19 2005 Götz Waschk <goetz@zarb.org> 2.12-4plf
+- fix directory conflict
+- Rebuild
+
+* Mon Nov  7 2005 Anssi Hannula <anssi@zarb.org> 2.12-3plf
+- fix x86_64 build (patch2)
+- distsuffix
+
+* Mon Nov  7 2005 Götz Waschk <goetz@zarb.org> 2.12-2plf
+- fix buildrequires
+- patch for gcc 4
+
+* Sun Apr 10 2005 Guillaume Bedot <littletux@zarb.org> 2.12-1plf
+- New release with some bug fixes :)
+
+* Mon Mar 14 2005 Götz Waschk <goetz@zarb.org> 2.11-1plf
+- update file list
+- fix buildrequires
+- drop patches
+- fix URL
+- fix License
+- new version
+
+* Thu Feb 17 2005 Götz Waschk <goetz@zarb.org> 2.10-4plf
+- fix build
+
+* Mon Jul 21 2003 Götz Waschk <goetz@plf.zarb.org> 2.10-3plf
+- buildrequires fix
+
+* Fri Jul 18 2003 Götz Waschk <goetz@plf.zarb.org> 2.10-2plf
+- patch to fix build with current gcc
+- quiet tar
+
+* Thu Apr 10 2003 Olivier Thauvin <thauvin@aerov.jussieu.fr> 2.10-1plf
+- => plf
+- games path
+- somes minor fix
+
+* Tue Mar 04 2003 Guillaume Bedot <guillaume.bedot@wanadoo.fr> 2.10-1mdk
+- Update to 2.10.
+
+* Tue Feb 25 2003 Guillaume Bedot <guillaume.bedot@wanadoo.fr> 2.10-0-20030225
+- Update to latest CVS.
+- Added menu entry and icons for the GUI.
+
+* Thu Feb 13 2003 Guillaume Bedot <guillaume.bedot@wanadoo.fr> 2.10-0-13022003
+- First try to package Hu-Go!
