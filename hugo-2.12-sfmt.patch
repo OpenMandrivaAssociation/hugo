@@ -1,0 +1,62 @@
+diff -urN hugo-2.12/hugo.c hugo-2.12-patched/hugo.c
+--- hugo-2.12/hugo.c	2014-03-03 20:28:56.485346169 +1100
++++ hugo-2.12-patched/hugo.c	2014-03-03 20:26:29.738875248 +1100
+@@ -128,14 +128,14 @@
+   if (!(*osd_gfx_driver_list[video_driver].init) ())
+     {
+       Log ("Can't set graphic mode\n");
+-      printf (MESSAGE[language][cant_set_gmode]);
++      printf ("%s", MESSAGE[language][cant_set_gmode]);
+       return 0;
+     }
+ 
+   if (!osd_snd_init_sound ())
+     {
+       Log ("Couldn't open any sound hardware on the host machine.\n");
+-      printf (MESSAGE[language][audio_init_failed]);
++      printf ("%s", MESSAGE[language][audio_init_failed]);
+     }
+   else
+     printf (MESSAGE[language][audio_inited], 8, "SDL compatible soundcard",
+diff -urN hugo-2.12/osd_linux_sdl_machine.c hugo-2.12-patched/osd_linux_sdl_machine.c
+--- hugo-2.12/osd_linux_sdl_machine.c	2005-04-06 06:53:14.000000000 +1100
++++ hugo-2.12-patched/osd_linux_sdl_machine.c	2014-03-03 20:27:02.201422041 +1100
+@@ -49,21 +49,21 @@
+ 
+   atexit(SDL_Quit);
+ 
+-  printf (MESSAGE[language][init_allegro]);
++  printf ("%s", MESSAGE[language][init_allegro]);
+ 
+-  printf (MESSAGE[language][translated_by]);
++  printf ("%s", MESSAGE[language][translated_by]);
+ 
+   if (!(XBuf = (UChar*)malloc(XBUF_WIDTH * XBUF_HEIGHT)))
+     {
+-      printf (MESSAGE[language][failed_init]);
++      printf ("%s", MESSAGE[language][failed_init]);
+       return (0);
+     }
+ 
+-  printf (MESSAGE[language][clear_buffer]);
++  printf ("%s", MESSAGE[language][clear_buffer]);
+   bzero (XBuf, XBUF_WIDTH * XBUF_HEIGHT);
+ 
+   Log ("Initiating sound\n");
+-  printf (MESSAGE[language][init_sound]);
++  printf ("%s", MESSAGE[language][init_sound]);
+   InitSound();
+ 
+ #ifndef SDL
+diff -urN hugo-2.12/utils.c hugo-2.12-patched/utils.c
+--- hugo-2.12/utils.c	2014-03-03 20:28:30.867914978 +1100
++++ hugo-2.12-patched/utils.c	2014-03-03 20:27:43.188112260 +1100
+@@ -66,7 +66,7 @@
+   if (!(log_file = fopen (log_filename, "at")))
+     return;
+ 
+-  fprintf (log_file, buf);
++  fprintf (log_file, "%s", buf);
+   fflush (log_file);
+   fclose (log_file);
+ }
