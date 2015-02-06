@@ -1,7 +1,7 @@
 Summary:	Hu-Go! - TurboGrafx 16/PC-Engine Emulator
 Name:		hugo
 Version:	2.12
-Release:	12
+Release:	13
 License:	GPLv2+
 Group:		Emulators
 Url:		http://www.zeograd.com/
