@@ -1,2 +1,5 @@
+removed_sources:
+  hugo-2.12.tar.bz2: 60d8f4d10bad629c61eb14e5488e8374c02d0e4a
 sources:
-  "hugo-2.12.tar.bz2": 60d8f4d10bad629c61eb14e5488e8374c02d0e4a
+  hugo-2.12.tar.gz: 52527c1ecc7cb5de9aa97afe807e0f48ef31e1c1
+  hugo-48.png: f60e6e7657a53503ad205b63dac91daa3a29745a
