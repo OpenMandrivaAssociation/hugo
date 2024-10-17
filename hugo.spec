@@ -4,7 +4,7 @@ Version:	2.12
 Release:	13
 License:	GPLv2+
 Group:		Emulators
-Url:		http://www.zeograd.com/
+Url:		https://www.zeograd.com/
 Source0:	http://www.zeograd.com/download/%{name}-%{version}.tar.gz
 Source1:	%{name}-48.png
 Patch0:		hugo-2.12-gcc4.patch
