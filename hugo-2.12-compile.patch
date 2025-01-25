@@ -1,0 +1,210 @@
+diff -up hugo-2.12/configure.ac.2~ hugo-2.12/configure.ac
+--- hugo-2.12/configure.ac.2~	2025-01-25 16:46:25.444005316 +0100
++++ hugo-2.12/configure.ac	2025-01-25 16:49:19.115645851 +0100
+@@ -3,7 +3,7 @@ AC_INIT(hugo, 2.12, zeograd@zeograd.com)
+ AM_INIT_AUTOMAKE(hugo, 2.12)
+ AC_CONFIG_SRCDIR([pce.c])
+ # AC_CONFIG_HEADER([config.h])
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS(config.h)
+ 
+ AC_CANONICAL_TARGET
+ # AC_ARG_PROGRAM
+@@ -38,7 +38,7 @@ else
+    AM_CONDITIONAL(HAVE_TOOLS_FOR_HTML_DOC,false)
+ fi
+ 
+-AC_SUBST(AVAILABLE_DOC_TARGETS)
++AC_SUBST([AVAILABLE_DOC_TARGETS])
+ 
+ # Checks for libraries.
+ 
+@@ -50,12 +50,12 @@ AC_CHECK_LIB(vorbisfile, main)
+ 
+ LIBZ_SUPPORT=no
+ 
+-AC_CHECK_LIB(z, main, [ LIBS="$LIBS -lz" AM_CONDITIONAL(ZLIB, true) AC_DEFINE([HAVE_LIBZ], [1], [Define to 1 if you have the 'z' library (-lz)]) LIBZ_SUPPORT=yes])
++AC_CHECK_LIB(z, main, [ LIBS="$LIBS -lz"; AM_CONDITIONAL([ZLIB], [true]) AC_DEFINE([HAVE_LIBZ], [1], [Define to 1 if you have the 'z' library (-lz)]) LIBZ_SUPPORT=yes])
+ 
+ if test "x$LIBZ_SUPPORT" = "xno"
+ then
+ 
+-AC_CHECK_LIB(zdll, main, [ LIBS="$LIBS -lzdll"  AM_CONDITIONAL(ZLIB, true) AC_DEFINE([HAVE_LIBZ], [1], [Define to 1 if you have the 'z' library (-lz)]) LIBZ_SUPPORT=yes] , AM_CONDITIONAL(ZLIB, false))
++AC_CHECK_LIB(zdll, main, [ LIBS="$LIBS -lzdll";  AM_CONDITIONAL([ZLIB], [true]) AC_DEFINE([HAVE_LIBZ], [1], [Define to 1 if you have the 'z' library (-lz)]) LIBZ_SUPPORT=yes] , AM_CONDITIONAL([ZLIB], [false]))
+ 
+ fi
+ 
+@@ -648,9 +648,9 @@ else
+   AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR,"${datadir}/hugo")
+ fi
+ 
+-AC_SUBST(HUGO_TARGET_MACHINE)
+-AC_SUBST(HUGO_TARGET_LIBRARY)
+-AC_SUBST(HUGO_TARGET_LIBRARY_LD)
++AC_SUBST([HUGO_TARGET_MACHINE])
++AC_SUBST([HUGO_TARGET_LIBRARY])
++AC_SUBST([HUGO_TARGET_LIBRARY_LD])
+ 
+ AC_CONFIG_FILES([Makefile])
+ AC_OUTPUT
+diff -up hugo-2.12/Makefile.am.omv~ hugo-2.12/Makefile.am
+--- hugo-2.12/Makefile.am.omv~	2025-01-25 16:51:29.438185807 +0100
++++ hugo-2.12/Makefile.am	2025-01-25 16:51:38.659392153 +0100
+@@ -92,7 +92,7 @@ EXTRA_hugo_SOURCES = osd_dos_cd.c osd_do
+ 	netplay.c netplay.h interface-server.h interface-server.c callbacks-server.h \
+ 	callbacks-server.c gtk_main-server.h gtk_main-server.c
+ 
+-AM_CFLAGS = @GTK_CFLAGS@ @CFLAGS@ -D@HUGO_TARGET_MACHINE@ @HUGO_TARGET_LIBRARY@
++AM_CFLAGS = -I/usr/include/SDL @GTK_CFLAGS@ @CFLAGS@ -D@HUGO_TARGET_MACHINE@ @HUGO_TARGET_LIBRARY@
+ 
+ hugo_LDFLAGS = @HUGO_TARGET_LIBRARY_LD@
+ hugod_LDFLAGS = -lSDL_net
+diff -up hugo-2.12/callbacks-server.c.omv~ hugo-2.12/callbacks-server.c
+--- hugo-2.12/callbacks-server.c.omv~	2025-01-25 17:19:16.713605413 +0100
++++ hugo-2.12/callbacks-server.c	2025-01-25 17:19:26.828434818 +0100
+@@ -10,6 +10,8 @@
+ #include "support.h"
+ #include "hugod.h"
+ 
++extern void serve_dispatch (global_option_type * global_option);
++
+ static  global_option_type global_option;	//!< Application global options
+ 
+ /*
+diff -up hugo-2.12/callbacks.c.omv~ hugo-2.12/callbacks.c
+--- hugo-2.12/callbacks.c.omv~	2025-01-25 17:11:40.530762079 +0100
++++ hugo-2.12/callbacks.c	2025-01-25 17:15:59.603029425 +0100
+@@ -7,11 +7,22 @@
+ #include "callbacks.h"
+ #include "interface.h"
+ #include "support.h"
++#include "utils.h"
+ 
+ #include "gtk_main.h"
+ #include "pce.h"
+ #include "iniconfig.h"
+ 
++extern void gtk_grab_control(int direction_index, int player_number); // gtk_main.c
++extern void gtk_copy_current_configuration();
++extern void set_gui_joydev(int player_number,int new_value);
++extern void gtk_general_settings_grab();
++extern void gtk_general_settings_set();
++extern void gtk_confirm_configuration();
++extern void gtk_update_configuration(gboolean);
++extern int play_game(void); // hugo.c
++extern void save_config(void); // iniconfig.c
++
+ static char tmp_buf[100];
+ 
+ 
+diff -up hugo-2.12/gfx.c.omv~ hugo-2.12/gfx.c
+--- hugo-2.12/gfx.c.omv~	2025-01-25 17:08:04.575133537 +0100
++++ hugo-2.12/gfx.c	2025-01-25 17:08:15.400705401 +0100
+@@ -21,6 +21,8 @@
+ /*                                                                        */
+ /**************************************************************************/
+ 
++#include <arpa/inet.h>
++
+ #include "pce.h"
+ #include "utils.h"
+ #include "config.h"
+diff -up hugo-2.12/gtk_main-server.c.omv~ hugo-2.12/gtk_main-server.c
+--- hugo-2.12/gtk_main-server.c.omv~	2025-01-25 17:19:57.658472095 +0100
++++ hugo-2.12/gtk_main-server.c	2025-01-25 17:20:34.908282502 +0100
+@@ -16,11 +16,14 @@
+ #include "gtk_main-server.h"
+ #include "interface-server.h"
+ #include "config.h"
++#include "support.h"
+ 
+ GtkWidget* window_main;
+ GtkWidget* window_help;
+ gboolean gtk_stop_asked;
+ 
++extern void add_pixmap_directory(const gchar     *directory);
++
+ //! Construct the gtk interface
+ void build_gtk_interface (int argc, char* argv[])
+ {
+diff -up hugo-2.12/h6280.c.omv~ hugo-2.12/h6280.c
+--- hugo-2.12/h6280.c.omv~	2025-01-25 17:16:39.501457386 +0100
++++ hugo-2.12/h6280.c	2025-01-25 17:17:34.990208538 +0100
+@@ -58,7 +58,7 @@ UChar flnz_list[256] = {
+ //
+ //  as a function:
+ 
+-inline UChar imm_operand(UInt16 addr) {
++UChar imm_operand(UInt16 addr) {
+   register unsigned short int memreg = addr>>13;
+   return( (UChar) (PageR[memreg][addr]));
+ }
+@@ -113,17 +113,17 @@ inline UInt16 get_16bit_addr(UInt16 addr
+ 
+ #define chk_flnz_8bit(x) reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[x]);
+ 
+-inline UChar get_8bit_zp(UChar zp_addr) {
++UChar get_8bit_zp(UChar zp_addr) {
+   return((UChar) *(zp_base + zp_addr) );
+ }
+ 
+-inline UInt16 get_16bit_zp(UChar zp_addr) {
++UInt16 get_16bit_zp(UChar zp_addr) {
+   UInt16 n = *(zp_base + zp_addr);
+   n += (*(zp_base + (UChar)(zp_addr+1)) << 8);
+   return(n);
+ }
+ 
+-inline void put_8bit_zp(UChar zp_addr, UChar byte) {
++void put_8bit_zp(UChar zp_addr, UChar byte) {
+   *(zp_base + zp_addr) = byte;
+ }
+ 
+diff -up hugo-2.12/hugod.c.omv~ hugo-2.12/hugod.c
+--- hugo-2.12/hugod.c.omv~	2025-01-25 17:18:08.310674524 +0100
++++ hugo-2.12/hugod.c	2025-01-25 17:18:42.911057377 +0100
+@@ -42,6 +42,8 @@ void printf_screen (char* format, ...)
+ 
+   vprintf(format, ap);
+ }
++#else
++extern void printf_screen (char* format, ...);
+ #endif
+ 
+ 
+@@ -368,7 +370,7 @@ main (int argc, char *argv[])
+ 	{
+ 		// No option given starts the GUI
+ 		build_gtk_interface(argc, argv);
+-		return;
++		return 0;
+ 	}
+ 
+ #endif
+diff -up hugo-2.12/osd_sdl_gfx.c.omv~ hugo-2.12/osd_sdl_gfx.c
+--- hugo-2.12/osd_sdl_gfx.c.omv~	2025-01-25 17:08:46.722917616 +0100
++++ hugo-2.12/osd_sdl_gfx.c	2025-01-25 17:10:29.940057696 +0100
+@@ -1,4 +1,7 @@
+ #include "osd_sdl_gfx.h"
++#include "utils.h"
++extern void SetPalette(void); // gfx.c
++extern void dump_rgb_frame(char* output_buffer); // gfx.c
+ 
+ //! PC Engine rendered screen
+ SDL_Surface *screen = NULL;
+@@ -342,12 +345,12 @@ int osd_gfx_init_normal_mode()
+ 	if (!host.video.hardware_scaling)
+ 		{
+ 			if ((screen->w == io.screen_w) && (screen->h == io.screen_h))
+-				return;
++				return 1;
+ 		}
+ 	else
+ 		{
+ 			if ((olay->w == io.screen_w) && (olay->h == io.screen_h))
+-				return;
++				return 1;
+ 		}
+ 	
+   if (!host.video.hardware_scaling)
+diff -up hugo-2.12/osd_sdl_gfx.h.omv~ hugo-2.12/osd_sdl_gfx.h

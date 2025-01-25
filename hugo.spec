@@ -11,6 +11,7 @@ Patch0:		hugo-2.12-gcc4.patch
 Patch1:		hugo-2.12-x86_64fix.patch
 Patch2:		hugo-2.12-x86_64-fixes-backport.patch
 Patch3:		hugo-2.12-sfmt.patch
+Patch4:		hugo-2.12-compile.patch
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(SDL_mixer)
 BuildRequires:	pkgconfig(SDL_net)
@@ -23,8 +24,8 @@ you play with. The other games need that you own the original card or CD.
 
 %files
 %doc AUTHORS NEWS README
-%attr(0755,root,games) %{_gamesbindir}/%{name}
-%{_gamesbindir}/hugod
+%attr(0755,root,games) %{_bindir}/%{name}
+%{_bindir}/hugod
 %{_datadir}/applications/%{name}.desktop
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
@@ -34,19 +35,20 @@ you play with. The other games need that you own the original card or CD.
 #----------------------------------------------------------------------------
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%autosetup -p1
+autoreconf -f
+automake -a
+aclocal
 autoconf
 
+%conf
+./configure --prefix=%{_prefix} --libdir=%{_libdir}
+
 %build
-%configure2_5x
-%make
+%make_build
 
 %install
-%makeinstall bindir=%{buildroot}/%{_gamesbindir}
+%make_install bindir=%{buildroot}/%{_gamesbindir}
 
 install -d -m 755 %{buildroot}%{_mandir}/man6/
 install -m 644 %{name}*.6 %{buildroot}%{_mandir}/man6/
@@ -57,8 +59,8 @@ mkdir -p %{buildroot}%{_datadir}/applications
 cat<<EOF>%{buildroot}%{_datadir}/applications/%{name}.desktop
 [Desktop Entry]
 Encoding=UTF-8
-Name=Hugo
-Comment=Hu-Go!
+Name=Hu-Go!
+Comment=%{summary}
 Exec=%{_gamesbindir}/hugo
 Icon=%{name}
 Terminal=false
@@ -66,4 +68,3 @@ Type=Application
 StartupNotify=true
 Categories=Game;Emulator;
 EOF
-
