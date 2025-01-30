@@ -16,9 +16,10 @@ Summary:	A static site generator written in Go.
 URL:		https://gohugo.io/
 License:	Apache 2.0
 Group:		development	
-Buildrequires: golang >= 1.20
-Buildrequires: git
-Buildrequires: clang 
+BuildRequires: golang >= 1.20
+BuildRequires: git
+BuildRequires: clang 
+BuildRequires: zstd
 
 %description
 Hugo is a static site generator written in Go, optimized for speed and designed
@@ -31,8 +32,15 @@ Hugo renders a complete site in seconds, often less.
 
 %build
 CGO_ENABLED=1 go build -tags extended -o %{buildroot}%{_bindir}/%{name} 
+install -d -p %{buildroot}%{_datadir}/bash-completion/completions
+%{buildroot}%{_bindir}/hugo completion > %{buildroot}%{_datadir}/bash-completion/completions/hugo
+%{buildroot}%{_bindir}/hugo gen man --dir %{buildroot}%{_mandir}/man1
+cd %{buildroot}%{_mandir}/man1
+zstd --rm *
 
 %files
-%{_bindir}/%{name}
+%doc CONTRIBUTING.md README.md
 %license LICENSE
-
+%{_bindir}/%{name}
+%{_datadir}/bash-completion/completions/hugo
+%{_mandir}/man1/*.1*
