@@ -1,0 +1,16 @@
+diff -up hugo-0.142.0/go.mod.fix hugo-0.142.0/go.mod
+--- hugo-0.142.0/go.mod.fix	2025-01-29 19:59:56.416008385 -0500
++++ hugo-0.142.0/go.mod	2025-01-29 20:00:15.909334375 -0500
+@@ -169,4 +169,12 @@ require (
+ 	software.sslmate.com/src/go-pkcs12 v0.2.0 // indirect
+ )
+ 
++replace (
++	github.com/bep/golibsass v1.2.0 => ../golibsass-1.2.0
++	github.com/bep/gowebp v0.3.0    => ../gowebp-0.3.0
++    go.opencensus.io v0.24.0        => ../opencensus-go-0.24.0
++)
++
++
++
+ go 1.22.6

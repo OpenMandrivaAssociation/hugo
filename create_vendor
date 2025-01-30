@@ -1,0 +1,75 @@
+#!/bin/bash
+# This script creates the vendor file for packaging hugo
+
+# Package name and version
+NAME=hugo
+VERSION=0.142.0
+
+# Name for output file
+VENDOR=vendor20250129.tar.gz
+
+# Source files
+Source0="https://github.com/gohugoio/hugo/archive/v${VERSION}/${NAME}-${VERSION}.tar.gz"
+PATCH0=patch0
+Source1=https://github.com/bep/golibsass/archive/v1.2.0/golibsass-1.2.0.tar.gz
+Source2=https://github.com/bep/gowebp/archive/v0.3.0/gowebp-0.3.0.tar.gz
+Source3=https://github.com/census-instrumentation/opencensus-go/archive/v0.24.0/opencensus-go-0.24.0.tar.gz
+
+## Function to download a soruce file if it does already exist
+DownloadSource () {
+    local FILENAME=$( basename $1 )
+    if  [ ! -f "./${FILENAME}"  ]; then
+    echo "${FILENAME} does not exist. Downloading"
+    curl -o "${FILENAME}" -L $1
+else
+    echo "${FILENAME} exists. Skipping"
+fi
+}
+
+# Starting with Source0 and incrementing by 1 until the SourceXX is undefined  
+SI=0
+while [[ -v Source$SI ]] 
+do
+    SOURCE=Source$SI
+    DownloadSource ${!SOURCE}
+    SI=$((SI + 1))
+done
+
+# Extract source files
+SI=0
+while [[ -v Source$SI ]] 
+do
+    SOURCE=Source$SI
+    echo "extracting $(basename ${!SOURCE} )"
+    tar -xvf $(basename ${!SOURCE} )  
+    SI=$((SI + 1))
+done
+
+# This is to address a few dependency issue of hugo
+patch -p 1 -d  $(basename $Source0 .tar.gz ) < $PATCH0 
+
+pushd $(basename $Source0 .tar.gz )
+go mod vendor
+popd
+
+#### This is needed address a compilation issue with golibsass gowebp when vendoring
+ cp -vr $(basename $Source1 .tar.gz )/libsass_src   $(basename $Source0 .tar.gz )/vendor/github.com/bep/golibsass   
+
+ cp -vr $(basename $Source2 .tar.gz )/libwebp_src $(basename $Source0 .tar.gz )/vendor/github.com/bep/gowebp
+####################################################################################
+
+# Compress vendor directory to carate the vendor file
+tar cvf $VENDOR "$(basename $Source0 .tar.gz )/vendor" 
+
+# Remove decompressed files
+SI=0
+while [[ -v Source$SI ]] 
+do
+    SOURCE=Source$SI
+    echo "Removing $(basename ${!SOURCE} .tar.gz )"
+    rm -rf $(basename ${!SOURCE} .tar.gz)  
+    SI=$((SI + 1))
+done
+
+
+

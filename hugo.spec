@@ -5,6 +5,7 @@ Version:	0.142.0
 Release:	1
 Source0:	https://github.com/gohugoio/hugo/archive/v%{version}/%{name}-%{version}.tar.gz
 # Vendor contains the most of the dependencies needed to build hugo
+# use the create_vendor script to create this file
 Source1:    vendor20250129.tar.gz
 Source2:    https://github.com/bep/golibsass/archive/v1.2.0/golibsass-1.2.0.tar.gz
 Source3:    https://github.com/bep/gowebp/archive/v0.3.0/gowebp-0.3.0.tar.gz
