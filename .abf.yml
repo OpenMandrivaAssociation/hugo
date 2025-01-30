@@ -1,0 +1,6 @@
+sources:
+  golibsass-1.2.0.tar.gz: 96a94100873d240b844c9977b2623c31860b6d3c
+  gowebp-0.3.0.tar.gz: 5b7523da635ce019c0322dd95755ec326b025865
+  hugo-0.142.0.tar.gz: 8ec0766a2216435e511916c21fcb32129486fa55
+  opencensus-go-0.24.0.tar.gz: 64f0dbcdbc7a92e20f24f3e8667fbfb35b770dd1
+  vendor20250129.tar.gz: be0e131a5e41b110e014af0e0a36e6d4a6c79058
