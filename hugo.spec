@@ -27,7 +27,7 @@ for flexibility. With its advanced templating system and fast asset pipelines,
 Hugo renders a complete site in seconds, often less.
 
 %prep
-%setup -a 0 -a 1 -b 2  -b 3  -b 4
+%setup -a 0 -b 1 -b 2  -b 3  -b 4
 %patch  0 -p 1
 
 %build
