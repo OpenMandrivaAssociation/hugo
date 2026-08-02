@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:		hugo
-Version:	0.142.0
+Version:	0.164.0
 Release:	1
 Source0:	https://github.com/gohugoio/hugo/archive/v%{version}/%{name}-%{version}.tar.gz
 # Vendor contains the most of the dependencies needed to build hugo
