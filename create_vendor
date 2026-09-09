@@ -3,10 +3,10 @@
 
 # Package name and version
 NAME=hugo
-VERSION=0.165.0
+VERSION=0.166.0
 
 # Name for output file
-VENDOR=vendor20260903.tar.gz
+VENDOR=vendor20260909.tar.gz
 
 # Source files
 Source0="https://github.com/gohugoio/hugo/archive/v${VERSION}/${NAME}-${VERSION}.tar.gz"
