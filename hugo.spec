@@ -1,12 +1,12 @@
 %define debug_package %{nil}
 
 Name:		hugo
-Version:	0.168.0
+Version:	0.169.0
 Release:	1
 Source0:	https://github.com/gohugoio/hugo/archive/v%{version}/%{name}-%{version}.tar.gz
 # Vendor contains the most of the dependencies needed to build hugo
 # use the create_vendor script to create this file
-Source1:	vendor20261016.tar.gz
+Source1:	vendor20261028.tar.gz
 Source2:	https://github.com/bep/golibsass/archive/v1.2.0/golibsass-1.2.0.tar.gz
 # Point go.mod at the local golibsass tree (includes libsass C sources)
 Patch0:		patch0
