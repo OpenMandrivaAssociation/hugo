@@ -1,67 +1,29 @@
 #!/bin/bash
-# This script creates the vendor file for packaging hugo
+# Create the offline vendor tarball for hugo.
+# Hugo 0.170 dropped the extended LibSass build, so this is go modules only.
+# The archive is an uncompressed tar named .tar.gz, matching earlier vendor files.
 
-# Package name and version
+set -euo pipefail
+
 NAME=hugo
-VERSION=0.169.0
-
-# Name for output file
-VENDOR=vendor20261028.tar.gz
-
-# Source files
+VERSION=0.170.0
+VENDOR=vendor20261114.tar.gz
 Source0="https://github.com/gohugoio/hugo/archive/v${VERSION}/${NAME}-${VERSION}.tar.gz"
-PATCH0=patch0
-Source1=https://github.com/bep/golibsass/archive/v1.2.0/golibsass-1.2.0.tar.gz
 
-## Function to download a source file if it does already exist
-DownloadSource () {
-    local FILENAME=$( basename $1 )
-    if  [ ! -f "./${FILENAME}"  ]; then
-    echo "${FILENAME} does not exist. Downloading"
-    curl -o "${FILENAME}" -L $1
-else
-    echo "${FILENAME} exists. Skipping"
+cd "$(dirname "$0")"
+
+if [ ! -f "${NAME}-${VERSION}.tar.gz" ]; then
+	echo "${NAME}-${VERSION}.tar.gz does not exist. Downloading"
+	curl -o "${NAME}-${VERSION}.tar.gz" -L "$Source0"
 fi
-}
 
-# Starting with Source0 and incrementing by 1 until the SourceXX is undefined
-SI=0
-while [[ -v Source$SI ]]
-do
-    SOURCE=Source$SI
-    DownloadSource ${!SOURCE}
-    SI=$((SI + 1))
-done
+workdir=$(mktemp -d)
+trap 'rm -rf "$workdir"' EXIT
 
-# Extract source files
-SI=0
-while [[ -v Source$SI ]]
-do
-    SOURCE=Source$SI
-    echo "extracting $(basename ${!SOURCE} )"
-    tar -xvf $(basename ${!SOURCE} )
-    SI=$((SI + 1))
-done
-
-# This is to address a few dependency issue of hugo
-patch -p 1 -d  $(basename $Source0 .tar.gz ) < $PATCH0
-
-pushd $(basename $Source0 .tar.gz )
-go mod vendor
-popd
-
-# go mod vendor drops the libsass C sources needed for the extended build
-cp -vr $(basename $Source1 .tar.gz )/libsass_src   $(basename $Source0 .tar.gz )/vendor/github.com/bep/golibsass
-
-# Compress vendor directory to create the vendor file
-tar cvf $VENDOR "$(basename $Source0 .tar.gz )/vendor"
-
-# Remove decompressed files
-SI=0
-while [[ -v Source$SI ]]
-do
-    SOURCE=Source$SI
-    echo "Removing $(basename ${!SOURCE} .tar.gz )"
-    rm -rf $(basename ${!SOURCE} .tar.gz)
-    SI=$((SI + 1))
-done
+tar -xzf "${NAME}-${VERSION}.tar.gz" -C "$workdir"
+(
+	cd "${workdir}/${NAME}-${VERSION}"
+	go mod vendor
+)
+# Uncompressed, despite the name. %setup accepts it and earlier vendors used tar cvf.
+tar cvf "$VENDOR" -C "$workdir" "${NAME}-${VERSION}/vendor"

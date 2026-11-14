@@ -1,9 +1,0 @@
-diff -up hugo-0.168.0/go.mod.orig hugo-0.168.0/go.mod
---- hugo-0.168.0/go.mod.orig	2026-10-16 00:00:00.000000000 +0200
-+++ hugo-0.168.0/go.mod	2026-10-16 00:00:00.000000000 +0200
-@@ -187,3 +187,5 @@ require (
- )
- 
- go 1.27.0
-+
-+replace github.com/bep/golibsass v1.2.0 => ../golibsass-1.2.0
