@@ -6,8 +6,8 @@
 set -euo pipefail
 
 NAME=hugo
-VERSION=0.170.0
-VENDOR=vendor20261114.tar.gz
+VERSION=0.170.1
+VENDOR=vendor20261117.tar.gz
 Source0="https://github.com/gohugoio/hugo/archive/v${VERSION}/${NAME}-${VERSION}.tar.gz"
 
 cd "$(dirname "$0")"

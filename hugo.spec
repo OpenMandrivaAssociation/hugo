@@ -1,12 +1,12 @@
 %define debug_package %{nil}
 
 Name:		hugo
-Version:	0.170.0
+Version:	0.170.1
 Release:	1
 Source0:	https://github.com/gohugoio/hugo/archive/v%{version}/%{name}-%{version}.tar.gz
 # Vendor contains the dependencies needed to build hugo.
 # Use the create_vendor script to create this file.
-Source1:	vendor20261114.tar.gz
+Source1:	vendor20261117.tar.gz
 Summary:	A static site generator written in Go.
 URL:		https://gohugo.io/
 License:	Apache 2.0
